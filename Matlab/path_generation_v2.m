@@ -1,4 +1,4 @@
-function [ output ] = path_generation( in,col_x,col_y,col_z,z_length )
+function [ output ] = path_generation_v2( in,col_x,col_y,col_z,z_length )
 %generate the XYZG array
 %   Detailed explanation goes here
 xyz_table=in(:,[col_x,col_y,col_z]);%read 'xyz' columns from 'in' array
@@ -24,28 +24,33 @@ for i=1:size(z,1)
         end
         for k=1:size(x_table,1)
             if i==1&&j==1&&k==1
-                x_table(k,4)=0;
+                x_table(k,4)=0; % set G=0 at the start point for whole model (the 1st layer)
+                output=[output;x_table(k,:)];
             else
                 if j==1&&k==1
-                    x_table(k,4)=0;
+                    x_table(k,4)=0; % set G=0 at the start point per layer (except the 1st layer)
+                    output=[output;x_table(k,:)];
                 else
                     if k==1
                         if x_table(k,2)-output(end,2)~=1
-                            x_table(k,4)=0;
+                            x_table(k,4)=0; % set G=0 at the start point per row if the shift is larger than one step (except the 1st row per layer)
+                            output=[output;x_table(k,:)];
                         else
-                            x_table(k,4)=1;
+                            x_table(k,4)=1; % set G=1 at the start point per row if the shift equals one step (except the 1st row per layer)
+                            output=[output;x_table(k,:)];
                         end
                     else
                         if abs(x_table(k,1)-x_table(k-1,1))~=1
-                            x_table(k,4)=0;
+                            x_table(k,4)=0; % set G=0 if the shift is larger than one step (except all start points) 
+                            output=[output;x_table(k-1,:);x_table(k,:)];
                         else
-                            x_table(k,4)=1;
+                            x_table(k,4)=1; % set G=1 if the shift equals one step (except all start points)
                         end
                     end
                 end
             end
         end
-        output=[output;x_table];
+        output=[output;x_table(end,:)];
     end
 end
 output(:,1:3)=output(:,1:3)/max(output(:,3))*z_length;%set scale, the same unit as z_length
