@@ -1,6 +1,11 @@
-in=importdata('grating.txt');
-z_length=1;%um
 col_x=2;
 col_y=3;
 col_z=4;
-xyzg=path_generation_v2( in,col_x,col_y,col_z,z_length );
+in=guanglipositive;
+z_length=1;
+out=path_generation(in,col_x,col_y,col_z,z_length);
+x=guanglipositive(:,2);
+y=guanglipositive(:,3);
+z=guanglipositive(:,4);
+figure(2);
+scatter3(x,y,z,'.');
