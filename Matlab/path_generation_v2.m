@@ -54,7 +54,7 @@ for i=1:size(z,1)
     end
 end
 output(:,1:3)=output(:,1:3)/max(output(:,3))*z_length;%set scale, the same unit as z_length
-scatter3(output(:,1), output(:,2), output(:,3),'.');
-xlabel('x');
+% scatter3(output(:,1), output(:,2), output(:,3),'.');
+% xlabel('x');
 end
 
